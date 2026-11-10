@@ -1,0 +1,76 @@
+# ─────────────────────────────────────────────
+# PreSeedHealer: only source code is committed
+# ─────────────────────────────────────────────
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+.yarn/
+.npm/
+
+# Build output & caches
+.next/
+out/
+dist/
+build/
+.turbo/
+.vercel/
+.cache/
+.eslintcache
+*.tsbuildinfo
+next-env.d.ts
+
+# Environment files / secrets (commit only the *.env.example templates)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# User uploads (runtime data, back these up separately)
+uploads/
+apps/api/uploads/
+
+# Database dumps & backups
+dump/
+backups/
+*.archive
+*.bson
+*.gz
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pm2/
+
+# Test & coverage output
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+
+# Editors & IDEs
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*.sublime-*
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# Local tooling / scratch
+.claude/
+*.local
+tmp/
+temp/

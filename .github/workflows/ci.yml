@@ -1,0 +1,24 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      # Build-time values only; the web build falls back gracefully when the API isn't reachable.
+      NEXT_PUBLIC_SITE_URL: https://preseedhealer.com
+      API_URL: http://127.0.0.1:4000/api/v1
+      REVALIDATE_SECRET: ci-only-not-a-real-secret
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build

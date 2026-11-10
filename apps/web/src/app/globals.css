@@ -1,0 +1,137 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* ---------- Design tokens ---------- */
+@theme {
+  /* Ink: primary dark neutral (text, dark sections) */
+  --color-ink-950: #070d1f;
+  --color-ink-900: #0b1530;
+  --color-ink-800: #15224a;
+  --color-ink-700: #24335f;
+  --color-ink-600: #4a5578;
+  --color-ink-500: #6b7491;
+  --color-ink-400: #8f97b0;
+  --color-ink-300: #b9bfd1;
+  --color-ink-200: #dde1ea;
+  --color-ink-100: #eef0f5;
+  --color-ink-50: #f7f8fb;
+
+  /* Brand: links, highlights */
+  --color-brand-50: #eef1ff;
+  --color-brand-100: #dce3ff;
+  --color-brand-400: #6f86ff;
+  --color-brand-500: #3b5bfd;
+  --color-brand-600: #2747d4;
+  --color-brand-700: #1d36a8;
+
+  /* Accent: saffron, primary CTAs (pair with ink text for AA contrast) */
+  --color-accent-50: #fff8e6;
+  --color-accent-100: #feefc3;
+  --color-accent-300: #fcd34d;
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+  --color-accent-700: #b45309;
+
+  --color-success-50: #ecfdf3;
+  --color-success-500: #16a34a;
+  --color-success-700: #15803d;
+  --color-danger-50: #fef2f2;
+  --color-danger-500: #dc2626;
+  --color-danger-700: #b91c1c;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font-sora), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Fluid type scale: mobile-first, grows with viewport */
+  --text-display: clamp(2.25rem, 1.55rem + 3.4vw, 4.5rem);
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.02em;
+  --text-h1: clamp(2rem, 1.5rem + 2.4vw, 3.5rem);
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.02em;
+  --text-h2: clamp(1.75rem, 1.4rem + 1.6vw, 2.75rem);
+  --text-h2--line-height: 1.15;
+  --text-h2--letter-spacing: -0.015em;
+  --text-h3: clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+  --text-h3--line-height: 1.3;
+  --text-lead: clamp(1.05rem, 1rem + 0.3vw, 1.25rem);
+  --text-lead--line-height: 1.6;
+
+  --shadow-card: 0 1px 2px rgb(11 21 48 / 0.04), 0 8px 24px -12px rgb(11 21 48 / 0.12);
+  --shadow-card-hover: 0 2px 4px rgb(11 21 48 / 0.05), 0 16px 40px -16px rgb(11 21 48 / 0.22);
+
+  --animate-fade-in: fade-in 0.2s ease-out;
+  --animate-slide-up: slide-up 0.25s ease-out;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- Base ---------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 6rem; /* keeps anchor targets clear of the sticky header */
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body {
+    @apply bg-white font-sans text-ink-900 antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4 { @apply font-display text-balance; }
+  p { @apply text-pretty; }
+
+  :focus-visible { @apply outline-2 outline-offset-2 outline-brand-500; }
+  ::selection { @apply bg-accent-300 text-ink-900; }
+
+  /* 16px+ inputs stop iOS Safari from zooming on focus. */
+  input, select, textarea { font-size: max(16px, 1em); }
+
+  summary { cursor: pointer; }
+  summary::-webkit-details-marker { display: none; }
+}
+
+/* ---------- Components ---------- */
+@layer components {
+  .card {
+    @apply rounded-2xl border border-ink-100 bg-white shadow-[var(--shadow-card)];
+  }
+  .card-hover {
+    @apply transition-shadow hover:shadow-[var(--shadow-card-hover)];
+  }
+
+  /* Long-form content (articles, legal pages) */
+  .article {
+    @apply prose prose-lg max-w-none prose-slate
+      prose-headings:font-display prose-headings:font-semibold prose-headings:tracking-tight prose-headings:text-ink-900
+      prose-h2:mt-12 prose-h2:text-h3 prose-h3:text-xl
+      prose-p:text-ink-700 prose-li:text-ink-700 prose-strong:text-ink-900
+      prose-a:font-medium prose-a:text-brand-600 prose-a:underline-offset-2 hover:prose-a:text-brand-700
+      prose-blockquote:border-l-accent-500 prose-blockquote:bg-accent-50 prose-blockquote:py-1 prose-blockquote:not-italic prose-blockquote:text-ink-700
+      prose-code:rounded prose-code:bg-ink-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:text-[0.85em] prose-code:font-medium prose-code:text-ink-800 prose-code:before:content-none prose-code:after:content-none
+      prose-img:rounded-2xl
+      prose-th:bg-ink-50 prose-th:px-3 prose-th:py-2 prose-td:px-3 prose-td:py-2 prose-table:text-base;
+  }
+  .article .table-wrap {
+    @apply -mx-4 overflow-x-auto px-4 sm:mx-0 sm:rounded-xl sm:border sm:border-ink-100 sm:px-0;
+  }
+  .article .table-wrap table { @apply my-0 min-w-[32rem]; }
+}

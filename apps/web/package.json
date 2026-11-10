@@ -1,0 +1,32 @@
+{
+  "name": "@preseedhealer/web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3100",
+    "build": "next build",
+    "start": "next start --port 3100",
+    "typecheck": "next typegen && tsc --noEmit"
+  },
+  "dependencies": {
+    "@preseedhealer/types": "*",
+    "clsx": "^2.1.1",
+    "next": "16.4.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "server-only": "^0.0.1",
+    "marked": "18.1.1",
+    "sanitize-html": "^2.18.1"
+  },
+  "devDependencies": {
+    "@preseedhealer/tsconfig": "*",
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/node": "^22.15.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.2.0",
+    "tailwindcss": "^4.3.5",
+    "typescript": "~5.9.3",
+    "@types/sanitize-html": "^2.16.2",
+    "@tailwindcss/typography": "^0.5.20"
+  }
+}

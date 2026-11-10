@@ -1,0 +1,45 @@
+{
+  "name": "@preseedhealer/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --env-file-if-exists=.env src/server.ts",
+    "build": "tsup",
+    "start": "node --env-file-if-exists=.env --enable-source-maps dist/server.js",
+    "typecheck": "tsc --noEmit",
+    "seed": "tsx --env-file-if-exists=.env src/scripts/seed.ts",
+    "seed:prod": "node --env-file-if-exists=.env dist/seed.js"
+  },
+  "dependencies": {
+    "@preseedhealer/types": "*",
+    "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "express-rate-limit": "^8.7.4",
+    "helmet": "^8.3.0",
+    "mongoose": "^9.12.1",
+    "morgan": "^1.12.1",
+    "zod": "^4.6.7",
+    "bcryptjs": "^3.0.3",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "2.5.0",
+    "nodemailer": "10.2.1"
+  },
+  "devDependencies": {
+    "@preseedhealer/tsconfig": "*",
+    "@types/compression": "^1.8.1",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^22.15.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.23.15",
+    "typescript": "~5.9.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.3.0",
+    "@types/nodemailer": "^8.0.2"
+  }
+}
