@@ -44,7 +44,8 @@ export default async function LegalPage({ params }: Props) {
       />
       <Container className="py-12 sm:py-16">
         <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[1fr_15rem]">
-          <div className="article" dangerouslySetInnerHTML={{ __html: html }} />
+          {/* min-w-0: lets the grid track shrink below wide content so tables scroll inside .table-wrap. */}
+          <div className="article min-w-0" dangerouslySetInnerHTML={{ __html: html }} />
           <nav aria-label="Legal pages" className="lg:sticky lg:top-28 lg:self-start">
             <p className="font-display text-sm font-semibold">Legal</p>
             <ul className="mt-3 space-y-1">

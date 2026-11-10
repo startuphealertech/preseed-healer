@@ -6,7 +6,7 @@ import bcrypt from "bcryptjs";
 import type { Types } from "mongoose";
 import { env } from "../config/env";
 import { connectDb, disconnectDb } from "../lib/db";
-import { User } from "../modules/auth/user.model";
+import { RevokedSession, User } from "../modules/auth/user.model";
 import { Faq, Page, Partner } from "../modules/directory/directory.models";
 import { Category } from "../modules/posts/category.model";
 import { Post, readingMinutes } from "../modules/posts/post.model";
@@ -78,7 +78,7 @@ async function seed() {
   console.log(`✓ legal pages: ${pagesCreated} created`);
 
   // Build indexes (autoIndex is off in production).
-  await Promise.all([Post, Category, Partner, Faq, Page, User, Application, InvestorInterest, ContactMessage].map((m) => (m as any).syncIndexes()));
+  await Promise.all([Post, Category, Partner, Faq, Page, User, RevokedSession, Application, InvestorInterest, ContactMessage].map((m) => (m as any).syncIndexes()));
   console.log("✓ indexes synced");
 
   await disconnectDb();

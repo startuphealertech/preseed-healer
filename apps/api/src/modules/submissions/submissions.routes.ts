@@ -17,7 +17,7 @@ import { toCsv } from "../../lib/csv";
 import { escapeRegex, paginate, toDto } from "../../lib/dto";
 import { HttpError } from "../../lib/http-error";
 import { notifyTeam, sendMail } from "../../lib/mailer";
-import { Application, ContactMessage, InvestorInterest, makeRefCode } from "./submissions.models";
+import { Application, ContactMessage, InvestorInterest, makeRefCode, normalizeEmail } from "./submissions.models";
 
 /* ---------------- Public ---------------- */
 
@@ -74,7 +74,18 @@ submissionsRouter.post("/applications", formLimiter, async (req, res) => {
 submissionsRouter.post("/investor-interests", formLimiter, async (req, res) => {
   if (isBot(req)) return void res.status(201).json({ ok: true, data: null });
   const { consent: _c, hp: _hp, ...input } = InvestorInterestInputSchema.parse(req.body);
-  await InvestorInterest.create({ ...input, consentAt: new Date(), ip: req.ip ?? "" });
+  const emailKey = normalizeEmail(input.email);
+
+  // The unique index on emailKey also catches two identical submissions racing past this check.
+  const duplicateInvestor = () =>
+    new HttpError(409, "DUPLICATE", "You've already registered your interest with this email. Our team will be in touch.");
+  if (await InvestorInterest.exists({ $or: [{ email: emailKey }, { emailKey }] })) throw duplicateInvestor();
+  try {
+    await InvestorInterest.create({ ...input, email: emailKey, emailKey, consentAt: new Date(), ip: req.ip ?? "" });
+  } catch (err) {
+    if ((err as { code?: number }).code === 11000) throw duplicateInvestor();
+    throw err;
+  }
 
   notifyTeam(
     `New investor interest: ${input.name}`,

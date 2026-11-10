@@ -11,7 +11,8 @@ export async function AnnouncementBar() {
         <span className="absolute inline-flex size-full animate-ping rounded-full bg-success-500 opacity-60 motion-reduce:hidden" />
         <span className="relative inline-flex size-2 rounded-full bg-success-500" />
       </span>
-      <span className="truncate">{announcement.text}</span>
+      {/* Wraps instead of truncating so the full message (e.g. the deadline) stays readable on phones. */}
+      <span className="min-w-0 text-balance break-words">{announcement.text}</span>
       {announcement.href && <span aria-hidden="true" className="hidden sm:inline">→</span>}
     </>
   );

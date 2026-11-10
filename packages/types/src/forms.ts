@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { HoneypotSchema, OptionalUrlSchema, PhoneSchema, SectorSchema } from "./common";
+import { EmailSchema, HoneypotSchema, OptionalUrlSchema, PhoneSchema, SectorSchema } from "./common";
 
 const consent = z.literal(true, { error: "Please accept to continue" });
 
@@ -18,7 +18,7 @@ export const STARTUP_STAGE_LABELS: Record<(typeof STARTUP_STAGES)[number], strin
 export const ApplicationInputSchema = z.object({
   // Founder
   founderName: z.string().trim().min(2, "Enter your full name").max(80),
-  email: z.email("Enter a valid email").trim().toLowerCase(),
+  email: EmailSchema,
   phone: PhoneSchema,
   linkedin: OptionalUrlSchema,
   city: z.string().trim().min(2, "Enter your city").max(60),
@@ -79,7 +79,7 @@ export const TICKET_SIZE_LABELS: Record<(typeof TICKET_SIZES)[number], string> =
 
 export const InvestorInterestInputSchema = z.object({
   name: z.string().trim().min(2, "Enter your name").max(80),
-  email: z.email("Enter a valid email").trim().toLowerCase(),
+  email: EmailSchema,
   phone: PhoneSchema,
   organization: z.string().trim().max(120).default(""),
   investorType: z.enum(INVESTOR_TYPES, { error: "Choose investor type" }),
@@ -114,7 +114,7 @@ export const CONTACT_SUBJECT_LABELS: Record<(typeof CONTACT_SUBJECTS)[number], s
 
 export const ContactInputSchema = z.object({
   name: z.string().trim().min(2, "Enter your name").max(80),
-  email: z.email("Enter a valid email").trim().toLowerCase(),
+  email: EmailSchema,
   phone: z.union([PhoneSchema, z.literal("")]).default(""),
   subject: z.enum(CONTACT_SUBJECTS).default("general"),
   message: z.string().trim().min(10, "Message is too short").max(2000),
@@ -130,7 +130,7 @@ export type ContactMessage = Omit<z.output<typeof ContactInputSchema>, "hp"> & {
 /* ---------- Admin auth ---------- */
 
 export const LoginInputSchema = z.object({
-  email: z.email("Enter a valid email").trim().toLowerCase(),
+  email: EmailSchema,
   password: z.string().min(1, "Enter your password").max(200),
 });
 export type LoginInput = z.input<typeof LoginInputSchema>;
@@ -143,10 +143,11 @@ export const ChangePasswordSchema = z.object({
 export type AdminUser = { id: string; email: string; name: string; role: "admin" | "editor" };
 
 export type DashboardStats = {
-  applications: { total: number; new: number; shortlisted: number };
-  investors: { total: number; new: number };
-  messages: { total: number; unread: number };
   posts: { published: number; drafts: number };
   partners: number;
-  recentApplications: Pick<Application, "id" | "refCode" | "startupName" | "founderName" | "sector" | "status" | "createdAt">[];
+  /** Submission data (personal data): present for admins only, omitted for editors. */
+  applications?: { total: number; new: number; shortlisted: number };
+  investors?: { total: number; new: number };
+  messages?: { total: number; unread: number };
+  recentApplications?: Pick<Application, "id" | "refCode" | "startupName" | "founderName" | "sector" | "status" | "createdAt">[];
 };

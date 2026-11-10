@@ -1,5 +1,5 @@
 import "server-only";
-import type { ApiResponse } from "@preseedhealer/types";
+import type { AdminUser, ApiResponse } from "@preseedhealer/types";
 
 const API_URL = (process.env.API_URL ?? "http://localhost:4000/api/v1").replace(/\/$/, "");
 
@@ -65,4 +65,24 @@ export async function orNull<T>(promise: Promise<T>): Promise<T | null> {
     if (err instanceof ApiRequestError && err.status === 404) return null;
     throw err;
   }
+}
+
+export const SESSION_COOKIE = "psh_session";
+
+/**
+ * Resolves an admin session cookie to its user by asking the API (`GET /auth/me`), which verifies
+ * the token signature, expiry, logout revocation and that the account still exists.
+ * Returns null for a missing, forged, expired or revoked session; throws if the API is unreachable.
+ */
+export async function getSessionUser(token: string | undefined): Promise<AdminUser | null> {
+  if (!token) return null;
+  const res = await fetch(`${API_URL}/auth/me`, {
+    headers: { Accept: "application/json", Cookie: `${SESSION_COOKIE}=${encodeURIComponent(token)}` },
+    cache: "no-store",
+    signal: AbortSignal.timeout(5000),
+  });
+  if (res.status === 401 || res.status === 403) return null;
+  const body = (await res.json().catch(() => null)) as ApiResponse<AdminUser> | null;
+  if (!body?.ok) throw new ApiRequestError(res.status, body?.error.code ?? "BAD_RESPONSE", "Session check failed");
+  return body.data;
 }
