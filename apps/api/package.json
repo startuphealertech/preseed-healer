@@ -9,7 +9,8 @@
     "start": "node --env-file-if-exists=.env --enable-source-maps dist/server.js",
     "typecheck": "tsc --noEmit",
     "seed": "tsx --env-file-if-exists=.env src/scripts/seed.ts",
-    "seed:prod": "node --env-file-if-exists=.env dist/seed.js"
+    "seed:prod": "node --env-file-if-exists=.env dist/seed.js",
+    "test": "tsx --test --test-concurrency=1 \"src/tests/**/*.test.ts\""
   },
   "dependencies": {
     "@preseedhealer/types": "*",

@@ -60,8 +60,13 @@ export function MarkdownInput({ id, value, onChange }: { id: string; value: stri
     if (tab !== "preview") return;
     let live = true;
     fetch("/api/preview", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ markdown: value }) })
-      .then((r) => r.json())
-      .then((j) => live && setHtml(j?.data?.html ?? ""))
+      .then(async (r) => {
+        const j = await r.json().catch(() => null);
+        if (!live) return;
+        if (r.status === 401) setHtml("<p>Your session has ended. Sign in again to preview.</p>");
+        else if (!j?.ok) setHtml("<p>Preview unavailable.</p>");
+        else setHtml(j.data?.html ?? "");
+      })
       .catch(() => live && setHtml("<p>Preview unavailable.</p>"));
     return () => {
       live = false;

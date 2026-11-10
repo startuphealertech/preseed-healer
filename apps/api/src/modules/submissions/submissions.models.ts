@@ -10,6 +10,9 @@ import {
   TICKET_SIZES,
 } from "@preseedhealer/types";
 
+/** Canonical form of an email for duplicate checks (trimmed, lower-case). */
+export const normalizeEmail = (email: string) => email.trim().toLowerCase();
+
 /** Human-friendly reference shown to applicants, e.g. PSH-26-7K3QXM. */
 export function makeRefCode(): string {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I
@@ -56,6 +59,8 @@ const investorInterestSchema = new Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, lowercase: true },
+    /** Normalised email used for the one-lead-per-email unique index. Not set on pre-existing leads. */
+    emailKey: { type: String, select: false },
     phone: { type: String, required: true },
     organization: { type: String, default: "" },
     investorType: { type: String, enum: INVESTOR_TYPES, required: true },
@@ -71,6 +76,15 @@ const investorInterestSchema = new Schema(
   { timestamps: true },
 );
 investorInterestSchema.index({ status: 1, createdAt: -1 });
+investorInterestSchema.index({ email: 1 });
+/**
+ * One lead per email. `emailKey` is set on every new lead; the partial filter
+ * leaves older rows without it out of the index, so existing duplicates don't block the build.
+ */
+investorInterestSchema.index(
+  { emailKey: 1 },
+  { unique: true, partialFilterExpression: { emailKey: { $type: "string" } }, name: "emailKey_unique" },
+);
 export const InvestorInterest = model("InvestorInterest", investorInterestSchema);
 
 const contactMessageSchema = new Schema(

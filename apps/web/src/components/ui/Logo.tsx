@@ -15,13 +15,8 @@ export function Logo({ tone = "dark", className }: { tone?: "dark" | "light"; cl
         <path d="M9 22 16 9l7 13" className="fill-none stroke-accent-500" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
         <circle cx="16" cy="20" r="2.2" className="fill-white" />
       </svg>
-      <span className="flex flex-col leading-none">
-        <span className={cn("font-display text-lg font-bold tracking-tight", tone === "light" ? "text-white" : "text-ink-900")}>
-          {siteConfig.shortName}
-        </span>
-        <span className={cn("mt-0.5 hidden text-[0.65rem] font-medium tracking-wide sm:block", tone === "light" ? "text-ink-300" : "text-ink-500")}>
-          {siteConfig.name}
-        </span>
+      <span className={cn("font-display text-lg leading-none font-bold tracking-tight", tone === "light" ? "text-white" : "text-ink-900")}>
+        {siteConfig.shortName}
       </span>
     </Link>
   );

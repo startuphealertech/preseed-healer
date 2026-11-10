@@ -20,10 +20,25 @@ export const ImageRefSchema = z
   .refine((v) => v === "" || v.startsWith("/") || /^https?:\/\//.test(v), "Enter a URL or upload an image")
   .default("");
 
+/** Email, trimmed and lower-cased *before* validation, so a pasted " Name@Example.com " is accepted and normalised. */
+export const EmailSchema = z.string().trim().toLowerCase().pipe(z.email("Enter a valid email"));
+
+export const PHONE_MIN_DIGITS = 8;
+export const PHONE_MAX_DIGITS = 15;
+/**
+ * Phone number with optional leading + and common separators (spaces, dashes, dots, brackets),
+ * e.g. "+91 98765 43210", "(555) 123-4567", "+44 20 7946 0958". Must contain 8–15 actual digits
+ * (E.164 allows at most 15), so separator-only input like "1-------" is rejected.
+ */
 export const PhoneSchema = z
   .string()
   .trim()
-  .regex(/^\+?[0-9][0-9 ()-]{7,18}$/, "Enter a valid phone number");
+  .max(25, "Enter a valid phone number")
+  .regex(/^\+?[0-9 ().-]+$/, "Enter a valid phone number")
+  .refine((v) => {
+    const digits = v.replace(/\D/g, "").length;
+    return digits >= PHONE_MIN_DIGITS && digits <= PHONE_MAX_DIGITS;
+  }, "Enter a valid phone number");
 
 export const SeoSchema = z.object({
   title: z.string().trim().max(70, "Keep SEO titles under 70 characters").default(""),

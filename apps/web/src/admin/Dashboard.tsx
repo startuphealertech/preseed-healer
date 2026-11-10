@@ -40,14 +40,14 @@ export function Dashboard() {
         data && (
           <>
             <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-              {isAdmin && <Stat label="Applications" value={data.applications.total} sub={`${data.applications.new} new · ${data.applications.shortlisted} shortlisted`} href="/admin/applications" />}
-              {isAdmin && <Stat label="Investor leads" value={data.investors.total} sub={`${data.investors.new} new`} href="/admin/investors" />}
-              {isAdmin && <Stat label="Messages" value={data.messages.total} sub={`${data.messages.unread} unread`} href="/admin/messages" />}
+              {isAdmin && data.applications && <Stat label="Applications" value={data.applications.total} sub={`${data.applications.new} new · ${data.applications.shortlisted} shortlisted`} href="/admin/applications" />}
+              {isAdmin && data.investors && <Stat label="Investor leads" value={data.investors.total} sub={`${data.investors.new} new`} href="/admin/investors" />}
+              {isAdmin && data.messages && <Stat label="Messages" value={data.messages.total} sub={`${data.messages.unread} unread`} href="/admin/messages" />}
               <Stat label="Published articles" value={data.posts.published} sub={`${data.posts.drafts} drafts`} href="/admin/posts" />
               {!isAdmin && <Stat label="Partners" value={data.partners} href="/admin/partners" />}
             </div>
 
-            {isAdmin && (
+            {isAdmin && data.recentApplications && (
               <Panel
                 title="Recent applications"
                 className="mt-6"
