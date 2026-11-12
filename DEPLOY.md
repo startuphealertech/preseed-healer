@@ -75,7 +75,8 @@ npm run build -w @preseedhealer/web && pm2 restart preseedhealer-web
 ## 4. Alternative: managed hosting
 
 - **Web on Vercel**: root `apps/web`, set the web env vars. `API_URL` must then be the API's public HTTPS URL.
-- **API on Render/Railway**: root `apps/api`, build `npm run build`, start `npm start`, add a **persistent disk** for `UPLOAD_DIR` (or uploads are lost on redeploy), and set `WEB_URL` to the public site URL.
+- **API on Render (Docker, recommended)**: `render.yaml` at the repo root is a Blueprint that builds `apps/api/Dockerfile` (context = repo root), mounts a persistent disk at `/var/data` for uploads and health-checks `/api/v1/health`. Render → New → Blueprint → this repo, then fill in the `sync: false` env vars. After the first deploy, run `node dist/seed.js` once from the Render Shell. Local build: `docker build -f apps/api/Dockerfile -t preseedhealer-api .`
+- **API on Render/Railway (native Node)**: root `apps/api`, build `npm install --include=dev && npm run build` (`--include=dev` is required when `NODE_ENV=production`, or `tsup` is missing), build `npm run build`, start `npm start`, add a **persistent disk** for `UPLOAD_DIR` (or uploads are lost on redeploy), and set `WEB_URL` to the public site URL.
 
 ## 5. Go-live checklist
 
